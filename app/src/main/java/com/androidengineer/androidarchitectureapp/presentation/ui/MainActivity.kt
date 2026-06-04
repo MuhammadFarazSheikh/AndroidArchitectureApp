@@ -1,12 +1,13 @@
 package com.androidengineer.androidarchitectureapp.presentation.ui
 
 import android.os.Bundle
-import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.androidengineer.androidarchitectureapp.R
+import com.androidengineer.androidarchitectureapp.databinding.ActivityMainBinding
+import com.androidengineer.androidarchitectureapp.presentation.recyclerviewadapter.PostsRecyclerViewAdapter
 import com.androidengineer.androidarchitectureapp.presentation.viewmodels.PostsUiState
 import com.androidengineer.androidarchitectureapp.presentation.viewmodels.PostsViewModel
 import kotlinx.coroutines.launch
@@ -14,11 +15,17 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var mainBinding: ActivityMainBinding
+    private lateinit var adapter: PostsRecyclerViewAdapter
     private val postsViewModel: PostsViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        mainBinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(mainBinding.root)
+        adapter = PostsRecyclerViewAdapter()
+        mainBinding.recyclerView.adapter = adapter
+
         observePosts()
     }
 
@@ -28,14 +35,13 @@ class MainActivity : AppCompatActivity() {
                 postsViewModel.uiState.collect { state ->
                     when (state) {
                         is PostsUiState.Success -> {
-                            state.posts.forEach { item ->
-                                Log.i("TAG", "observePosts: ${item.title}")
-                            }
+                            adapter.submitList(state.posts)
                         }
                         is PostsUiState.Error -> {
+                            Toast.makeText(this@MainActivity, state.message, Toast.LENGTH_SHORT).show()
                         }
                         is PostsUiState.Loading -> {
-                            Log.i("TAG", "observePosts: Loading")
+                            Toast.makeText(this@MainActivity, "Loading", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
