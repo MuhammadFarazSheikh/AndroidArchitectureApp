@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 
 interface PostsRepository {
-    suspend operator fun invoke(): Flow<Result<List<Post>>>
+    suspend operator fun invoke(): Flow<List<Post>>
 }

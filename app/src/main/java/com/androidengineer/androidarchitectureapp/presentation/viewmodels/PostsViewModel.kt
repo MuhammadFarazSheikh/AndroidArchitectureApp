@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import com.androidengineer.androidarchitectureapp.data.repository.Result
+import com.androidengineer.androidarchitectureapp.data.repository.asResult
 
 class PostsViewModel(
     private val repository: PostsRepository
@@ -23,7 +24,7 @@ class PostsViewModel(
 
     private fun loadPosts() {
         viewModelScope.launch {
-            repository().collect { result ->
+            repository().asResult().collect { result ->
                 when (result) {
                     is Result.Success -> _uiState.value = PostsUiState.Success(result.data)
                     is Result.Error -> _uiState.value = PostsUiState.Error(result.exception.message!!)

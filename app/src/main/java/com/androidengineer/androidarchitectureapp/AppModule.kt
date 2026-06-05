@@ -1,9 +1,12 @@
 package com.androidengineer.androidarchitectureapp
 
+import androidx.room.Room
 import com.androidengineer.androidarchitectureapp.data.remote.PostsApiService
 import com.androidengineer.androidarchitectureapp.data.remote.PostsRemoteDataSource
 import com.androidengineer.androidarchitectureapp.data.repository.PostsRepository
 import com.androidengineer.androidarchitectureapp.data.repository.PostsRepositoryImpl
+import com.androidengineer.androidarchitectureapp.data.local.AppDatabase
+import com.androidengineer.androidarchitectureapp.data.local.PostsLocalDataSource
 import com.androidengineer.androidarchitectureapp.presentation.viewmodels.PostsViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -13,6 +16,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+private const val APP_DB_NAME = "posts-database"
 private val networkModule = module {
     single {
         HttpLoggingInterceptor().apply {
@@ -38,15 +42,29 @@ private val networkModule = module {
 
 private val dataModule = module {
     singleOf(::PostsRemoteDataSource)
-    single<PostsRepository> { PostsRepositoryImpl(get()) }
+    singleOf(::PostsLocalDataSource)
+    single<PostsRepository> { PostsRepositoryImpl(get(),get()) }
 }
 
 private val viewModelModule = module {
     factoryOf(::PostsViewModel)
 }
 
+private val appDatabaseModule = module {
+    single {
+        Room.databaseBuilder(
+            get(),
+            AppDatabase::class.java,
+            APP_DB_NAME
+        ).build()
+    }
+
+    single { get<AppDatabase>().postsDao() }
+}
+
 val appModule = listOf(
     networkModule,
     dataModule,
-    viewModelModule
+    viewModelModule,
+    appDatabaseModule
 )
