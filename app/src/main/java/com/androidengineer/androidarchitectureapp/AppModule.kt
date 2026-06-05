@@ -13,8 +13,7 @@ import com.androidengineer.androidarchitectureapp.presentation.viewmodels.PostsV
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
-import org.koin.core.module.dsl.factoryOf
-import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -50,7 +49,7 @@ private val dataModule = module {
 }
 
 private val viewModelModule = module {
-    factoryOf(::PostsViewModel)
+    viewModelOf(::PostsViewModel)
 }
 
 private val appDatabaseModule = module {
