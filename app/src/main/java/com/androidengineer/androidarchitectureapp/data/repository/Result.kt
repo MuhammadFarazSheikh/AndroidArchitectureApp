@@ -14,11 +14,3 @@ sealed interface Result<out T> {
 fun <T> Flow<T>.asResult(): Flow<Result<T>> = map<T, Result<T>> { result -> Result.Success(result) }
     .onStart { emit(Result.Loading) }
     .catch { error -> emit(Result.Error(error)) }
-
-fun <T, R> Result<T>.map(transform: (T) -> R): Result<R> {
-    return when (this) {
-        is Result.Success -> Result.Success(transform(data))
-        is Result.Error -> Result.Error(exception)
-        is Result.Loading -> Result.Loading
-    }
-}
