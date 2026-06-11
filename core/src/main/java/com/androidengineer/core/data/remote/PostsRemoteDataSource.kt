@@ -1,5 +1,6 @@
 package com.androidengineer.core.data.remote
 
+import com.androidengineer.core.data.remote.api.PostsApiService
 import com.androidengineer.core.data.remote.model.PostResource
 
 class PostsRemoteDataSource(

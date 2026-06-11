@@ -1,4 +1,4 @@
-package com.androidengineer.core.data.remote
+package com.androidengineer.core.data.remote.api
 
 import com.androidengineer.core.data.remote.model.PostResource
 import retrofit2.http.GET

@@ -1,11 +1,11 @@
-package com.androidengineer.core.data
+package com.androidengineer.core
 
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
-import com.androidengineer.core.data.local.AppDatabase
+import com.androidengineer.core.data.local.roomdb.AppDatabase
 import com.androidengineer.core.data.local.PostsLocalDataSource
-import com.androidengineer.core.data.remote.PostsApiService
+import com.androidengineer.core.data.remote.api.PostsApiService
 import com.androidengineer.core.data.remote.PostsRemoteDataSource
 import com.androidengineer.core.data.repository.PostsRepository
 import com.androidengineer.core.data.repository.PostsRepositoryImpl

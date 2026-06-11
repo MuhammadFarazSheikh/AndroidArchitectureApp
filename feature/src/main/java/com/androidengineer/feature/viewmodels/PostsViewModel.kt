@@ -5,9 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.androidengineer.core.domain.model.Post
 import com.androidengineer.core.data.repository.PostsRepository
 import kotlinx.coroutines.flow.StateFlow
-import com.androidengineer.core.data.repository.asResult
-import com.androidengineer.core.data.repository.Result
-import com.androidengineer.core.data.repository.ApiException
+import com.androidengineer.core.asResult
+import com.androidengineer.core.Result
+import com.androidengineer.core.ApiException
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn

@@ -1,12 +1,11 @@
 package com.androidengineer.core.data.repository
 
-import android.util.Log
 import com.androidengineer.core.domain.model.Post
 import com.androidengineer.core.data.local.PostsLocalDataSource
-import com.androidengineer.core.data.localToDomainModel
+import com.androidengineer.core.localToDomainModel
 import com.androidengineer.core.data.remote.PostsRemoteDataSource
-import com.androidengineer.core.data.remoteToDomainModel
-import com.androidengineer.core.data.toEntity
+import com.androidengineer.core.remoteToDomainModel
+import com.androidengineer.core.toEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

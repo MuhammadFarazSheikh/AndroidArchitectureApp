@@ -1,4 +1,4 @@
-package com.androidengineer.core.data.repository
+package com.androidengineer.core
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
