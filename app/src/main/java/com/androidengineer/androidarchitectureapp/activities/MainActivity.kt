@@ -1,31 +1,13 @@
 package com.androidengineer.androidarchitectureapp.activities
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import com.androidengineer.androidarchitectureapp.navigation.Navigation
+import androidx.appcompat.app.AppCompatActivity
+import com.androidengineer.androidarchitectureapp.R
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setContent {
-            App()
-        }
-    }
-
-    @Composable
-    fun App() {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            content = { paddingValues ->
-                Navigation(paddingValues)
-            }
-        )
+        setContentView(R.layout.activity_main)
     }
 }

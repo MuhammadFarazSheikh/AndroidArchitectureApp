@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.parcelize)
-    id("org.jetbrains.kotlin.plugin.compose")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -15,7 +15,7 @@ android {
     }
 
     buildFeatures {
-        compose = true
+        dataBinding = true
     }
 
     compileOptions {
@@ -25,25 +25,16 @@ android {
 }
 
 dependencies {
-    val composeBom = platform("androidx.compose:compose-bom:2026.05.00")
-    implementation(composeBom)
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.material3)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
     implementation(libs.material)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.koin.androidx.compose)
+    implementation("androidx.navigation:navigation-fragment-ktx:2.9.8")
+    implementation("androidx.navigation:navigation-ui-ktx:2.9.8")
+    implementation(libs.koin.android)
     implementation(project(":core"))
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
-    androidTestImplementation(libs.androidx.ui.test.junit4)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)

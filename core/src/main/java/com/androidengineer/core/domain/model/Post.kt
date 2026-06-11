@@ -1,4 +1,4 @@
-package com.androidengineer.feature.model
+package com.androidengineer.core.domain.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

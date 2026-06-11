@@ -1,4 +1,4 @@
-package com.androidengineer.androidarchitectureapp
+package com.androidengineer.core.data
 
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
@@ -9,11 +9,9 @@ import com.androidengineer.core.data.remote.PostsApiService
 import com.androidengineer.core.data.remote.PostsRemoteDataSource
 import com.androidengineer.core.data.repository.PostsRepository
 import com.androidengineer.core.data.repository.PostsRepositoryImpl
-import com.androidengineer.feature.viewmodels.PostsViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
-import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -48,10 +46,6 @@ private val dataModule = module {
     single<PostsRepository> { PostsRepositoryImpl(get(), get()) }
 }
 
-private val viewModelModule = module {
-    viewModelOf(::PostsViewModel)
-}
-
 private val appDatabaseModule = module {
     single {
         Room.databaseBuilder(
@@ -70,10 +64,9 @@ val dataStoreModule = module {
     single { androidContext().dataStore }
 }
 
-val appModule = listOf(
+val coreModule = arrayListOf(
     networkModule,
     dataModule,
-    viewModelModule,
     appDatabaseModule,
     dataStoreModule
 )

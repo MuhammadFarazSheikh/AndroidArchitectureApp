@@ -1,6 +1,6 @@
 package com.androidengineer.feature.interfaces
 
-import com.androidengineer.feature.model.Post
+import com.androidengineer.core.domain.model.Post
 
 interface OnItemClick {
     fun onItemClick(item: Post);

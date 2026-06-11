@@ -2,38 +2,44 @@ package com.androidengineer.feature.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.androidengineer.feature.model.Post
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import com.androidengineer.core.domain.model.Post
 import com.androidengineer.core.data.repository.PostsRepository
+import kotlinx.coroutines.flow.StateFlow
 import com.androidengineer.core.data.repository.asResult
 import com.androidengineer.core.data.repository.Result
-import com.androidengineer.feature.remoteToPresentationModel
+import com.androidengineer.core.data.repository.ApiException
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
 class PostsViewModel(
-    private val repository: PostsRepository
+    postsRepository: PostsRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<PostsUiState>(PostsUiState.Loading)
-    val uiState: StateFlow<PostsUiState> = _uiState.asStateFlow()
-
-    init {
-        loadPosts()
-    }
-
-    private fun loadPosts() {
-        viewModelScope.launch {
-            repository().asResult().collect { result ->
-                when (result) {
-                    is Result.Success -> _uiState.value = PostsUiState.Success(result.data.map { post -> post.remoteToPresentationModel() })
-                    is Result.Error -> _uiState.value = PostsUiState.Error(result.exception.message!!)
-                    is Result.Loading ->  _uiState.value = PostsUiState.Loading
+    val uiState: StateFlow<PostsUiState> = postsRepository.getPosts()
+        .asResult()
+        .map { result ->
+            when (result) {
+                is Result.Success -> PostsUiState.Success(result.data)
+                is Result.Error -> {
+                    val message = when (val exception = result.exception) {
+                        is ApiException -> when (exception.code) {
+                            401 -> "Session expired. Please login again."
+                            404 -> "Posts not found."
+                            500 -> "Server error. Please try again later."
+                            else -> "Something went wrong (Error: ${exception.code})"
+                        }
+                        else -> exception.message ?: "Unknown error occurred"
+                    }
+                    PostsUiState.Error(message)
                 }
+                is Result.Loading -> PostsUiState.Loading
             }
-        }
-    }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = PostsUiState.Loading
+        )
 }
 
 sealed interface PostsUiState {
