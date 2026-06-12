@@ -5,16 +5,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
 import androidx.navigation.fragment.findNavController
-import com.androidengineer.core.domain.model.Post
 import com.androidengineer.feature.adapter.PostsListRecyclerViewAdapter
 import com.androidengineer.feature.databinding.FragmentPostsListBinding
 import com.androidengineer.feature.interfaces.OnItemClick
+import com.androidengineer.feature.model.PostUiModel
 import com.androidengineer.feature.viewmodels.PostsUiState
 import com.androidengineer.feature.viewmodels.PostsViewModel
-import kotlinx.coroutines.launch
 
 class PostsListFragment : Fragment(), OnItemClick {
 
@@ -37,18 +39,20 @@ class PostsListFragment : Fragment(), OnItemClick {
         adapter = PostsListRecyclerViewAdapter(this)
         binding.postsRecyclerView.adapter = adapter
 
-        lifecycleScope.launch {
-            viewModel.uiState.collect { uiState ->
-                when(uiState) {
-                    is PostsUiState.Success -> adapter.submitList(uiState.posts)
-                    is PostsUiState.Error -> {}
-                    is PostsUiState.Loading -> {}
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { uiState ->
+                    when (uiState) {
+                        is PostsUiState.Success -> adapter.submitList(uiState.postUiModels)
+                        is PostsUiState.Error -> {}
+                        is PostsUiState.Loading -> {}
+                    }
                 }
             }
         }
     }
 
-    override fun onItemClick(item: Post) {
+    override fun onItemClick(item: PostUiModel) {
         findNavController().navigate(PostsListFragmentDirections.actionPostsListFragmentToPostsDetailFragment(item))
     }
 }

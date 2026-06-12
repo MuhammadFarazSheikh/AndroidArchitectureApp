@@ -2,52 +2,54 @@ package com.androidengineer.feature.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.androidengineer.core.domain.model.Post
 import com.androidengineer.feature.databinding.PostListItemBinding
 import com.androidengineer.feature.interfaces.OnItemClick
+import com.androidengineer.feature.model.PostUiModel
 
-class PostsListRecyclerViewAdapter(val onItemClick: OnItemClick) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    private val list = arrayListOf<Post>()
+class PostsListRecyclerViewAdapter(private val onItemClick: OnItemClick) :
+    ListAdapter<PostUiModel, PostsListRecyclerViewAdapter.PostViewHolder>(PostDiffCallback()) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): RecyclerView.ViewHolder {
-        return PostViewHolder(PostListItemBinding.inflate(LayoutInflater.from(parent.context)))
+    ): PostViewHolder {
+        return PostViewHolder(
+            PostListItemBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(
-        holder: RecyclerView.ViewHolder,
+        holder: PostViewHolder,
         position: Int
     ) {
-        val holder = holder as PostViewHolder
-        holder.bind(list[position])
-        holder.setOnItemClick(list[position])
+        holder.bind(getItem(position))
     }
 
-    override fun getItemCount(): Int {
-        return list.size
-    }
+    inner class PostViewHolder(private val binding: PostListItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-    inner class PostViewHolder(val binding: PostListItemBinding) : RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(post: Post) {
-            binding.textViewTitle.text = post.title
-        }
-
-        fun setOnItemClick(post: Post) {
+        fun bind(postUiModel: PostUiModel) {
+            binding.textViewTitle.text = postUiModel.title
             binding.root.setOnClickListener {
-                onItemClick.onItemClick(post)
+                onItemClick.onItemClick(postUiModel)
             }
         }
     }
 
-    fun submitList(list: List<Post>) {
-        this.list.clear()
-        this.list.addAll(list)
-        notifyDataSetChanged()
+    class PostDiffCallback : DiffUtil.ItemCallback<PostUiModel>() {
+        override fun areItemsTheSame(oldItem: PostUiModel, newItem: PostUiModel): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: PostUiModel, newItem: PostUiModel): Boolean {
+            return oldItem == newItem
+        }
     }
 }

@@ -37,6 +37,9 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.gson)
     testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
 }
